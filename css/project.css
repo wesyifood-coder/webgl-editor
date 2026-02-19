@@ -1,0 +1,5 @@
+/* Minimal project-specific CSS, main styles in main.css */
+.asset-preview-canvas {
+  width: 60px; height: 60px; border-radius: 4px; background: #222;
+  display: block; margin: 0 auto 4px;
+}
