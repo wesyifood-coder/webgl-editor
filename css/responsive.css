@@ -1,0 +1,365 @@
+/* =====================================================================
+   responsive.css — Suporte a telas wide (18:9, 19:9, 21:9) e altura baixa
+   
+   Breakpoints de altura usados:
+     < 700px  → laptop pequeno / tablet landscape
+     < 580px  → phone landscape (18:9 comum: 2340×1080 = 580px se 200% zoom)
+     < 480px  → phone landscape (18:9: ex. 360×780 em landscape = 360px alto)
+     < 380px  → phone landscape muito pequeno
+   
+   Breakpoints de largura/proporção:
+     min-aspect-ratio 16/9  → wide comum
+     min-aspect-ratio 18/9  → phone landscape, ultrawide
+     min-aspect-ratio 21/9  → ultrawide monitor
+   ===================================================================== */
+
+/* ─────────────────────────────────────────────────────────────────────
+   VARIÁVEIS DE TAMANHO — substituídas em cada breakpoint
+   ───────────────────────────────────────────────────────────────────── */
+:root {
+  --menubar-h:    30px;
+  --toolbar-h:    28px;
+  --bottom-h:     180px;
+  --panel-hdr-h:  26px;
+  --font-base:    12px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   SAFE AREA — notch/câmera em phones (iPhone X+, Android com câmera)
+   ───────────────────────────────────────────────────────────────────── */
+@supports (padding: env(safe-area-inset-left)) {
+  #menu-bar {
+    padding-left:  max(8px, env(safe-area-inset-left));
+    padding-right: max(8px, env(safe-area-inset-right));
+  }
+  /* Garante que o editor não fique atrás do notch em landscape */
+  #editor {
+    padding-left:   env(safe-area-inset-left);
+    padding-right:  env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   PROPORÇÃO WIDE (≥ 18:9) — mesmo com altura normal
+   Objetivo: dar mais espaço ao canvas central reduzindo painéis laterais
+   ───────────────────────────────────────────────────────────────────── */
+@media (min-aspect-ratio: 18/9) {
+  #hierarchy-panel { width: 185px; }
+  #inspector-panel { width: 235px; }
+  #bottom-panel    { height: 160px; }
+  #resize-left     { left: 185px; }
+  #resize-right    { right: 235px; }
+  #resize-bottom   { bottom: 160px; }
+  #resize-left, #resize-right { bottom: 160px; }
+}
+
+@media (min-aspect-ratio: 21/9) {
+  #hierarchy-panel { width: 170px; }
+  #inspector-panel { width: 215px; }
+  #bottom-panel    { height: 150px; }
+  #resize-left     { left: 170px; }
+  #resize-right    { right: 215px; }
+  #resize-bottom   { bottom: 150px; }
+  #resize-left, #resize-right { bottom: 150px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   ALTURA < 700px — laptop pequeno, tablet landscape
+   ───────────────────────────────────────────────────────────────────── */
+@media (max-height: 700px) {
+  :root {
+    --menubar-h:   26px;
+    --toolbar-h:   24px;
+    --bottom-h:    150px;
+    --panel-hdr-h: 22px;
+  }
+
+  /* Barras superiores */
+  #menu-bar {
+    height: var(--menubar-h);
+  }
+  #transform-toolbar {
+    height: var(--toolbar-h);
+    padding: 0 6px;
+    gap: 2px;
+  }
+  .tool-btn {
+    width: 24px;
+    height: 20px;
+    font-size: 11px;
+  }
+  .play-btn {
+    width: 26px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  /* Panel header */
+  .panel-header {
+    height: var(--panel-hdr-h);
+    font-size: 10px;
+    padding: 0 6px;
+  }
+
+  /* Bottom panel */
+  #bottom-panel {
+    height: var(--bottom-h);
+  }
+  #resize-bottom        { bottom: var(--bottom-h); }
+  #resize-left          { bottom: var(--bottom-h); top: calc(var(--menubar-h) + var(--toolbar-h)); }
+  #resize-right         { bottom: var(--bottom-h); top: calc(var(--menubar-h) + var(--toolbar-h)); }
+
+  /* Tabs */
+  .view-tab    { padding: 4px 12px; font-size: 11px; }
+  .bottom-tab  { padding: 4px 10px; font-size: 11px; }
+
+  /* Inspector mais compacto */
+  #inspector-content { padding: 6px; }
+  .component-header  { padding: 4px 6px; }
+  .component-body    { padding: 6px; }
+  .prop-row          { margin-bottom: 4px; min-height: 20px; }
+
+  /* Hierarchy mais compacto */
+  .hierarchy-item    { padding: 2px 6px; }
+  .hierarchy-name    { font-size: 11px; }
+
+  /* Bottom panel tabs */
+  .console-toolbar   { padding: 3px 6px; }
+  .timeline-toolbar  { padding: 3px 6px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   ALTURA < 580px — phone landscape 18:9 (ex: 1080×2340 virado = ~580px)
+   ───────────────────────────────────────────────────────────────────── */
+@media (max-height: 580px) {
+  :root {
+    --menubar-h:   24px;
+    --toolbar-h:   22px;
+    --bottom-h:    130px;
+    --panel-hdr-h: 20px;
+    --font-base:   11px;
+  }
+
+  html, body { font-size: var(--font-base); }
+
+  /* Barras superiores mínimas */
+  #menu-bar {
+    height: var(--menubar-h);
+    padding: 0 6px;
+    gap: 2px;
+  }
+  .menu-logo    { font-size: 11px; margin-right: 6px; }
+  .menu-item    { padding: 3px 7px; font-size: 11px; }
+
+  #transform-toolbar {
+    height: var(--toolbar-h);
+    padding: 0 4px;
+    gap: 1px;
+  }
+  .tool-btn     { width: 21px; height: 18px; font-size: 10px; }
+  .play-btn     { width: 23px; height: 18px; font-size: 9px; }
+  .toolbar-label { display: none; }          /* oculta "Snap" etc. */
+  .toolbar-separator { margin: 0 2px; }
+
+  /* Painéis laterais */
+  #hierarchy-panel { width: 165px; }
+  #inspector-panel { width: 210px; }
+
+  /* Bottom panel */
+  #bottom-panel  { height: var(--bottom-h); }
+  #resize-bottom { bottom: var(--bottom-h); }
+  #resize-left   { bottom: var(--bottom-h); top: calc(var(--menubar-h) + var(--toolbar-h)); }
+  #resize-right  { bottom: var(--bottom-h); top: calc(var(--menubar-h) + var(--toolbar-h)); }
+
+  /* View tabs — mais estreitos */
+  .view-tab      { padding: 3px 8px; font-size: 10px; }
+  .bottom-tab    { padding: 3px 8px; font-size: 10px; }
+
+  /* Panel header */
+  .panel-header  { height: var(--panel-hdr-h); font-size: 10px; }
+
+  /* Inspector */
+  #inspector-content { padding: 4px; }
+  .component-header  { padding: 3px 6px; }
+  .component-title   { font-size: 11px; }
+  .component-body    { padding: 5px; }
+  .prop-row          { margin-bottom: 3px; min-height: 18px; }
+  .prop-label        { width: 80px; font-size: 10px; }
+  .prop-input, .prop-select { font-size: 10px; padding: 1px 5px; }
+  .vec-inputs input  { font-size: 10px; padding: 1px 3px; }
+
+  /* Hierarchy */
+  .hierarchy-item  { padding: 2px 4px; }
+  .hierarchy-name  { font-size: 11px; }
+  .hierarchy-icon  { font-size: 11px; }
+  #hierarchy-tree  { padding: 2px 0; }
+
+  /* Gizmo menor */
+  #axis-gizmo { width: 64px; height: 64px; }
+
+  /* Toast no topo para não cobrir canvas */
+  .toast { bottom: auto; top: 28px; }
+
+  /* Startup adaptado */
+  .startup-logo     { padding: 14px 20px; }
+  .startup-logo h1  { font-size: 20px; }
+  .startup-logo p   { font-size: 11px; }
+  .logo-icon        { width: 44px; height: 44px; font-size: 20px; }
+  .startup-content  { padding: 16px; gap: 16px; min-height: 0; }
+  .startup-right    { width: 240px; }
+
+  /* Modais: scroll para caber em tela baixa */
+  .dialog-content    { max-height: calc(100vh - 32px); overflow-y: auto; }
+  .lighting-content,
+  .build-content,
+  .prefs-content     { max-height: calc(100vh - 50px); overflow-y: auto; }
+  #script-editor     { font-size: 11px; line-height: 1.5; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   ALTURA < 480px — phone landscape pequeno (ex: 360px alto)
+   ───────────────────────────────────────────────────────────────────── */
+@media (max-height: 480px) {
+  :root {
+    --menubar-h:   22px;
+    --toolbar-h:   20px;
+    --bottom-h:    110px;
+    --panel-hdr-h: 18px;
+  }
+
+  #menu-bar          { height: var(--menubar-h); padding: 0 4px; }
+  .menu-logo         { font-size: 10px; margin-right: 4px; }
+  .menu-item         { padding: 2px 6px; font-size: 10px; }
+  /* Esconde itens de menu menos usados */
+  .menu-items .menu-item:nth-child(n+6) { display: none; }
+
+  #transform-toolbar { height: var(--toolbar-h); padding: 0 3px; }
+  .tool-btn          { width: 19px; height: 16px; font-size: 9px; }
+  .play-btn          { width: 20px; height: 16px; font-size: 8px; }
+  /* Esconde ferramentas menos usadas */
+  #transform-toolbar .tool-btn:nth-child(n+10) { display: none; }
+
+  /* Painéis laterais bem estreitos */
+  #hierarchy-panel   { width: 150px; }
+  #inspector-panel   { width: 195px; }
+
+  /* Bottom panel mínimo */
+  #bottom-panel      { height: var(--bottom-h); }
+  #resize-bottom     { bottom: var(--bottom-h); }
+  #resize-left       { bottom: var(--bottom-h); top: calc(var(--menubar-h) + var(--toolbar-h)); }
+  #resize-right      { bottom: var(--bottom-h); top: calc(var(--menubar-h) + var(--toolbar-h)); }
+
+  .panel-header      { height: var(--panel-hdr-h); font-size: 9px; }
+
+  /* View tabs: esconde os menos usados para poupar espaço */
+  .view-tab[data-view="animator"]      { display: none; }
+  .view-tab[data-view="shader-editor"] { display: none; }
+  .view-tab[data-view="modeler"]       { display: none; }
+  .view-tab      { padding: 2px 8px; font-size: 10px; }
+  .bottom-tab    { padding: 2px 7px; font-size: 10px; }
+
+  /* Gizmo ainda menor */
+  #axis-gizmo    { width: 52px; height: 52px; }
+
+  /* Inspector ultra compacto */
+  .component-header  { padding: 3px 5px; }
+  .component-title   { font-size: 10px; }
+  .component-body    { padding: 4px; }
+  .prop-row          { margin-bottom: 2px; min-height: 16px; }
+  .prop-label        { width: 72px; font-size: 9px; }
+  .prop-input, .prop-select { font-size: 9px; padding: 1px 4px; }
+  .obj-name-input    { font-size: 11px; padding: 2px 5px; }
+
+  /* Startup */
+  .startup-logo      { padding: 10px 16px; }
+  .startup-logo h1   { font-size: 17px; }
+  .startup-logo p    { display: none; }
+  .logo-icon         { width: 36px; height: 36px; font-size: 16px; }
+  .startup-content   { padding: 12px; gap: 12px; }
+  .startup-right     { width: 210px; }
+  .btn-primary, .btn-secondary, .btn-github { padding: 7px 10px; font-size: 11px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   ALTURA < 380px — phone landscape muito pequeno
+   ───────────────────────────────────────────────────────────────────── */
+@media (max-height: 380px) {
+  :root {
+    --menubar-h:   20px;
+    --toolbar-h:   18px;
+    --bottom-h:    90px;
+  }
+
+  #menu-bar          { height: var(--menubar-h); }
+  #transform-toolbar { height: var(--toolbar-h); }
+
+  /* Sem painel lateral nesta altura — painel de hierarquia fica como overlay */
+  #hierarchy-panel   { width: 140px; }
+  #inspector-panel   { width: 175px; }
+
+  #bottom-panel      { height: var(--bottom-h); }
+  #resize-bottom     { bottom: var(--bottom-h); }
+  #resize-left       { bottom: var(--bottom-h); top: calc(var(--menubar-h) + var(--toolbar-h)); }
+  #resize-right      { bottom: var(--bottom-h); top: calc(var(--menubar-h) + var(--toolbar-h)); }
+
+  /* Gizmo mínimo */
+  #axis-gizmo        { width: 44px; height: 44px; }
+  .scene-info span   { font-size: 9px; padding: 2px 5px; }
+  .camera-info       { font-size: 9px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   COMBINADO: WIDE (≥ 18:9) + BAIXO (< 600px)
+   Caso clássico: phone 18:9 ou 20:9 deitado (ex: 1080×2340 em landscape)
+   ───────────────────────────────────────────────────────────────────── */
+@media (min-aspect-ratio: 18/9) and (max-height: 600px) {
+  /* Canvas central precisa de espaço máximo */
+  #center-panel      { min-width: 280px; }
+
+  /* Painéis laterais mais estreitos */
+  #hierarchy-panel   { width: 160px; }
+  #inspector-panel   { width: 200px; }
+
+  #resize-left       { left: 160px; }
+  #resize-right      { right: 200px; }
+}
+
+@media (min-aspect-ratio: 21/9) and (max-height: 600px) {
+  #hierarchy-panel   { width: 150px; }
+  #inspector-panel   { width: 190px; }
+  #resize-left       { left: 150px; }
+  #resize-right      { right: 190px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   STARTUP SCREEN — wide + baixo
+   ───────────────────────────────────────────────────────────────────── */
+@media (min-aspect-ratio: 18/9) and (max-height: 700px) {
+  #startup-screen    { align-items: flex-start; padding-top: 10px; }
+  .startup-container {
+    max-height: calc(100vh - 20px);
+    overflow-y: auto;
+    border-radius: 8px;
+  }
+  .startup-content   { min-height: 0; padding: 16px; }
+}
+
+/* Em altura muito baixa, muda o layout da startup para horizontal */
+@media (max-height: 520px) {
+  .startup-content {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .startup-left    { min-width: 240px; }
+  .startup-right   { min-width: 200px; flex: 1; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   ULTRA WIDE (≥ 32:9) — monitores duplos, TVs super wide
+   ───────────────────────────────────────────────────────────────────── */
+@media (min-aspect-ratio: 32/9) {
+  #hierarchy-panel { width: 160px; }
+  #inspector-panel { width: 200px; }
+  #bottom-panel    { height: 145px; }
+}
